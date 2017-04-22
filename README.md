@@ -25,17 +25,20 @@ The work is licensed under [Creative Commons Attribution 4.0 International](http
 
 Installing required software:
 
+```
 pip for python3, e.g.:
 apt-get install python3-pip
 
 pip3 install numpy h5py gensim
 pip3 install git+git://github.com/fchollet/keras.git --upgrade --no-deps
+```
 
-Note! Code is developed for Keras 1.2.x, not fully compatible with Keras 2
 Set Keras backend to "theano" in ~/.keras/keras.json!
 
+Note! Code is developed for Keras 1.2.x, not fully compatible with Keras 2.
+
 For training model, run:
-python3 train.py
+`python3 train.py`
 
 Data is available through the [CoNLL-2016 Shared Task](http://www.cs.brandeis.edu/~clp/conll16st/dataset.html).
 
