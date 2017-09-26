@@ -80,6 +80,9 @@ def shift(X, y, dev_X, dev_y, shuffle=False, val_size=None):
 
 ## Load data
 
+csv_trainset = resources.read_csv_relations("sample.txt")
+csv_senses = resources.read_csv_senses("sample.txt")
+
 trainset = resources.read_relations("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-zh-01-08-2016-train/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
 devset = resources.read_relations("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-zh-01-08-2016-dev/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
 testset = resources.read_relations("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-zh-01-08-2016-test/", ignore_types=["Explicit", "AltLex"])

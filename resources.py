@@ -8,6 +8,28 @@ import gensim
 import numpy as np
 import collections
 
+
+def read_csv_senses(path, ignore_types=[], sep="|", arg1idx=4, arg2idx=5, senseidx=3):
+    """ Like read_csv_relations, but returns only sense labels. """
+
+    print ("Reading", path)
+    senses = []
+
+    for line in open(path):
+        cols = [x.strip() for x in line.split(sep)]
+        relation = {'Arg1': cols[arg1idx], 'Arg2': cols[arg2idx], 'Sense': [cols[senseidx]]}
+        ignore = False
+        for ignoree in ignore_types:
+            if 'Type' in relation and ignoree in relation['Type']:
+                ignore = True
+        if ignore:
+            continue
+
+        senses.append(relation['Sense'])
+
+    return senses
+
+
 def read_senses(path, ignore_types=[]):
     """ Like read_relations, but returns only sense labels. """
     senses = []
@@ -23,6 +45,43 @@ def read_senses(path, ignore_types=[]):
             continue
         senses.append(relation['Sense'])
     return senses
+
+
+def read_csv_relations(path, ignore_types=[], partial_sampling=False, sep="|", arg1idx=4, arg2idx=5, senseidx=3):
+    """ Read relations CSV to produce annotated token
+        sequences with relation sense labels.
+        Annotations mark argument spans. """
+
+    print ("Reading", path)
+    relations = []
+
+    for line in open(path):
+        anno_tokens = []
+        arg_tokens = [[],[]]
+        cols = [x.strip() for x in line.split(sep)]
+        relation = {'Arg1': cols[arg1idx], 'Arg2': cols[arg2idx], 'Sense': [cols[senseidx]]}
+        ignore = False
+        for ignoree in ignore_types:
+            if 'Type' in relation and ignoree in relation['Type']:
+                ignore = True
+        if ignore:
+            continue
+
+        arg_tokens[0] = "<ARG1>"+relation['Arg1']+"</ARG1>"
+        arg_tokens[1] = "<ARG2>"+relation['Arg2']+"</ARG2>"
+        anno_tokens.append(arg_tokens[0]+arg_tokens[1])
+
+        if partial_sampling:
+            relations.append((anno_tokens, relation['Sense'][0]))
+            relations.append((anno_tokens, relation['Sense'][0]))
+            relations.append((arg_tokens[0], relation['Sense'][0]))
+            relations.append((arg_tokens[1], relation['Sense'][0]))
+        else:
+            relations.append((anno_tokens, relation['Sense'][0]))
+
+    print (len(relations), "read")
+    print ()
+    return relations
 
 
 def read_relations(path, ignore_types=[], partial_sampling=False, with_syntax=False, with_context=False):
