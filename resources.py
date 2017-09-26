@@ -58,7 +58,7 @@ def read_csv_relations(path, ignore_types=[], partial_sampling=False, sep="|", a
     for line in open(path):
         anno_tokens = []
         arg_tokens = [[],[]]
-        cols = [x.strip() for x in line.split(sep)]
+        cols = [x.strip().split() for x in line.split(sep)]
         relation = {'Arg1': cols[arg1idx], 'Arg2': cols[arg2idx], 'Sense': [cols[senseidx]]}
         ignore = False
         for ignoree in ignore_types:
@@ -67,8 +67,8 @@ def read_csv_relations(path, ignore_types=[], partial_sampling=False, sep="|", a
         if ignore:
             continue
 
-        arg_tokens[0] = "<ARG1>"+relation['Arg1']+"</ARG1>"
-        arg_tokens[1] = "<ARG2>"+relation['Arg2']+"</ARG2>"
+        arg_tokens[0] = ["<ARG1>"]+relation['Arg1']+["</ARG1>"]
+        arg_tokens[1] = ["<ARG2>"]+relation['Arg2']+["</ARG2>"]
         anno_tokens.append(arg_tokens[0]+arg_tokens[1])
 
         if partial_sampling:
