@@ -59,7 +59,7 @@ def read_csv_relations(path, ignore_types=[], partial_sampling=False, sep="|", a
         anno_tokens = []
         arg_tokens = [[],[]]
         cols = [x.strip().split() for x in line.split(sep)]
-        relation = {'Arg1': cols[arg1idx], 'Arg2': cols[arg2idx], 'Sense': [cols[senseidx]]}
+        relation = {'Arg1': cols[arg1idx], 'Arg2': cols[arg2idx], 'Sense': cols[senseidx][0]}
         ignore = False
         for ignoree in ignore_types:
             if 'Type' in relation and ignoree in relation['Type']:
@@ -69,15 +69,15 @@ def read_csv_relations(path, ignore_types=[], partial_sampling=False, sep="|", a
 
         arg_tokens[0] = ["<ARG1>"]+relation['Arg1']+["</ARG1>"]
         arg_tokens[1] = ["<ARG2>"]+relation['Arg2']+["</ARG2>"]
-        anno_tokens.append(arg_tokens[0]+arg_tokens[1])
+        anno_tokens = arg_tokens[0]+arg_tokens[1]
 
         if partial_sampling:
-            relations.append((anno_tokens, relation['Sense'][0]))
-            relations.append((anno_tokens, relation['Sense'][0]))
-            relations.append((arg_tokens[0], relation['Sense'][0]))
-            relations.append((arg_tokens[1], relation['Sense'][0]))
+            relations.append((anno_tokens, relation['Sense']))
+            relations.append((anno_tokens, relation['Sense']))
+            relations.append((arg_tokens[0], relation['Sense']))
+            relations.append((arg_tokens[1], relation['Sense']))
         else:
-            relations.append((anno_tokens, relation['Sense'][0]))
+            relations.append((anno_tokens, relation['Sense']))
 
     print (len(relations), "read")
     print ()
