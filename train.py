@@ -190,21 +190,3 @@ for nexp in range(5):
 	del inlayer1, emb1, lstm1, attention1, att1drop, output, model, opt
 
 
-### Build new model to output alpha weights
-"""
-emb1X = Embedding(len(vocab)+2, emb_dim, input_length=max_len, trainable=True,
-				 mask_zero=True, weights=[vectors],
-				 dropout=0.5, W_constraint=maxnorm(2)
-				 , weights=model.layers[1].get_weights()
-				)(inlayer1)
-lstm1X = Bidirectional(
-			LSTM(300, activation="tanh", input_dim=emb_dim, return_sequences=True
-				, dropout=0.5, W_regularizer=WeightRegularizer(l2=0.0000025)
-				, weights=model.layers[2].get_weights())
-		, merge_mode='concat')(emb1X)
-attention1X = F.FarATTN(name="M_ATTN1", weights=model.layers[3].get_weights(), return_alpha=True)(lstm1X)
-
-modelX = Model(input=inlayer1, output=attention1X)
-
-test_alphas = modelX.predict(test_X), batch_size=80)
-"""

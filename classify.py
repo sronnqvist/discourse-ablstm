@@ -12,6 +12,12 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
 import resources
 
+## For attention weight export
+from keras.models import Model
+from keras.layers import LSTM, Input
+from keras.layers.embeddings import Embedding
+from keras.layers.wrappers import Bidirectional
+
 
 def convert_data(dataset, nclasses=None, part=None):
 	"""" Convert relation data to LSTM input format """
@@ -51,7 +57,7 @@ for tokens, label in trainset+devset+testset:
 print ("Vocabulary:", len(vocab))
 print ("Classes:", len(labels))
 
-token2id, label2id, id2token, id2label = json.load(open("repo/discourse-ablstm/model7301.map"))
+token2id, label2id, id2token, id2label = json.load(open("model7301.map"))
 
 # Read pre-trained word2vec vectors
 #vectors = resources.get_vectors(vocab, token2id, "zh-Gigaword-300.txt")
@@ -64,10 +70,31 @@ test_X, test_y = convert_data(testset, nclasses=len(labels))
 # Load model
 batch_size = 80
 print("Loading model...")
-model = load_model('repo/discourse-ablstm/model7301.keras', {'FarATTN': FarATTN})
+model = load_model('model7301.keras', {'FarATTN': FarATTN})
 print("Predicting...")
 preds = model.predict(test_X, batch_size=batch_size)
 print(preds)
 
 # Evaluate
 # model.evaluate(test_X, test_y, batch_size=batch_size)
+
+
+
+### Build new model to output alpha weights
+inlayer1 = Input(shape=(max_len,))
+
+emb1X = Embedding(len(vocab)+2, emb_dim, input_length=max_len, trainable=True, mask_zero=True
+                                , weights=model.layers[1].get_weights()
+                                )(inlayer1)
+lstm1X = Bidirectional(
+                        LSTM(300, activation="tanh", input_dim=emb_dim, return_sequences=True)
+                        , weights=model.layers[2].get_weights()
+                        , merge_mode='concat')(emb1X)
+attention1X = FarATTN(name="M_ATTN1", weights=model.layers[3].get_weights(), return_alpha=True)(lstm1X)
+
+modelX = Model(input=inlayer1, output=attention1X)
+
+# Attention weights for test set predictions
+test_alphas = modelX.predict(test_X, batch_size=80)
+
+
