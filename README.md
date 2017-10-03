@@ -5,7 +5,7 @@ Code developed by Samuel Rönnqvist, with contributions and comments from Farrok
 
 This repository hosts the model described in: 
 
-Samuel Rönnqvist, Niko Schenk and Christian Chiarcos. [A Recurrent Neural Model with Attention for the Recognition of Chinese Implicit Discourse Relations](https://arxiv.org/pdf/1704.08092.pdf). Forthcoming in *Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL)*. 2017.
+Samuel Rönnqvist, Niko Schenk and Christian Chiarcos. [A Recurrent Neural Model with Attention for the Recognition of Chinese Implicit Discourse Relations](https://arxiv.org/pdf/1704.08092.pdf). In *Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL)*. 2017.
 
 ```
 @inproceedings{ronnqvist2017ablstm,
