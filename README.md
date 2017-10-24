@@ -19,6 +19,8 @@ Samuel Rönnqvist, Niko Schenk and Christian Chiarcos. [A Recurrent Neural Model
 }
 ```
 
+The paper is also available as a [poster](https://github.com/sronnqvist/discourse-ablstm/blob/master/acl_poster.pdf), which was presented at the ACL conference.
+
 The work is licensed under [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/), for academic use please cite above paper.
 
 ## Requirements
