@@ -3,6 +3,15 @@ Attention-based Bidirectional Long Short-Term Memory model for classification of
 
 Code developed by Samuel Rönnqvist, with contributions and comments from Farrokh Mehryary, Niko Schenk and Philip Schultz.
 
+**NOTE**: The model from these authors performs bad on the blind test dataset!!! Also, the attention is computed in respect to a fixed query vector.
+
+```
+Trainable params: 6,569,710
+Best validation score: 92.86 
+with test score: 71.59
+with blind score: 56.39
+```
+
 This repository hosts the model described in: 
 
 Samuel Rönnqvist, Niko Schenk and Christian Chiarcos. [A Recurrent Neural Model with Attention for the Recognition of Chinese Implicit Discourse Relations](https://arxiv.org/pdf/1704.08092.pdf). In *Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL)*. 2017.
@@ -28,22 +37,37 @@ The work is licensed under [Creative Commons Attribution 4.0 International](http
 Installing required software:
 
 ```
-pip for python3, e.g.:
-apt-get install python3-pip
+apt-get install python3 python3-pip
 
 pip3 install numpy h5py gensim
-pip3 install git+git://github.com/fchollet/keras.git --upgrade --no-deps
+pip3 install keras==1.2.0
+
+gzip -d zh-gw300_intersect.w2v.gz
 ```
 
-Set Keras backend to "theano" in ~/.keras/keras.json!
+For training use:
 
-Note! Code is developed for Keras 1.2.x, not fully compatible with Keras 2.
+```
+KERAS_BACKEND=theano python3 train.py
+```
 
-For training model, run:
-`python3 train.py`
+Code is developed for Keras 1.2.x, not fully compatible with Keras 2. Use Keras backend "theano".
 
-Data is available through the [CoNLL-2016 Shared Task](http://www.cs.brandeis.edu/~clp/conll16st/dataset.html).
+Alternatively run it inside the Docker container [gw000/keras-full](https://hub.docker.com/r/gw000/keras-full/):
 
+```
+docker run -it --rm -v $(pwd):/srv --user root gw000/keras-full:1.2.0 bash
+pip3 install numpy h5py gensim
+KERAS_BACKEND=theano python3 train.py
+```
 
+For training model on GPU using Docker:
 
+```
+docker run -it --rm $(ls /dev/nvidia* | xargs -I{} echo '--device={}') $(ls /usr/lib/*-linux-gnu/{libcuda,libnvidia}* | xargs -I{} echo '-v {}:{}:ro') -v $(pwd):/srv --user root gw000/keras-full:1.2.0 bash
+pip3 install numpy h5py gensim
+KERAS_BACKEND=theano THEANO_FLAGS='device=gpu,floatX=float32,nvcc.fastmath=True,lib.cnmem=0.45' python3 train.py
+```
+
+Data is provided through LDC and was used for [CoNLL-2016 Shared Task](http://www.cs.brandeis.edu/~clp/conll16st/dataset.html).
 
