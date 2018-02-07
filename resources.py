@@ -152,7 +152,7 @@ def get_vectors(vocab, token2id, path):
         except:
             vectors = gensim.models.word2vec.Word2Vec.load_word2vec_format(path, binary=True)
 
-    vocab_dim = len(vectors[list(vectors.vocab.keys())[0]])
+    vocab_dim = len(vectors[list(vectors.wv.vocab.keys())[0]])
     nsymbols = len(vocab) + 1
     embedding_weights = np.zeros((nsymbols+1,vocab_dim))
     print ("Mapping word vectors...")
@@ -162,7 +162,7 @@ def get_vectors(vocab, token2id, path):
         elif word.lower() in vectors:
             embedding_weights[index,:] = vectors[word.lower()]
         else:
-            embedding_weights[index,:] = vectors[list(vectors.vocab.keys())[0]]*0
+            embedding_weights[index,:] = vectors[list(vectors.wv.vocab.keys())[0]]*0
     return embedding_weights
 
 
