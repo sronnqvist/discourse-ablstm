@@ -131,7 +131,7 @@ blind_X, blind_y = convert_data(blindset, nclasses=y.shape[1])
 ## Define model
 batch_size = 80
 
-X, y, dev_X, dev_y = shift(X, y, dev_X, dev_y, val_size=None, shuffle=True)
+# was cheating: X, y, dev_X, dev_y = shift(X, y, dev_X, dev_y, val_size=None, shuffle=True)
 
 for nexp in range(5):
 	# Repeat experiment

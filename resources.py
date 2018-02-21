@@ -74,6 +74,7 @@ def read_relations(path, ignore_types=[], partial_sampling=False, with_syntax=Fa
             dep_depth.update(dict([(int(token.split('-')[-1])-1, depth+1) for token, depth in traverse(build_tree(doc['sentences'][sent_i]['dependencies']))]))
             for i, token in enumerate(doc['sentences'][sent_i]['words']):
                 if sent_i == arg1_beg_sent and i == arg1_beg_token:
+                    arg_idx = 0  # was missing
                     anno_tokens.append("<ARG1>")
                     arg_tokens[arg_idx].append("<ARG1>")
                     arg_pos[arg_idx].append("<ARG1>")
