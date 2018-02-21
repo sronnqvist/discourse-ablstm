@@ -1,4 +1,4 @@
-# KERAS_BACKEND=theano THEANO_FLAGS='device=gpu,floatX=float32,nvcc.fastmath=True,lib.cnmem=0.45' python3 train.py
+$ KERAS_BACKEND=theano THEANO_FLAGS='device=gpu,floatX=float32,nvcc.fastmath=True,lib.cnmem=0.45' python3 train.py
 Using Theano backend.
 Using gpu device 0: GeForce GTX 980 Ti (CNMeM is enabled with initial size: 45.0% of memory, cuDNN 5105)
 Reading conll16st-zh-01-08-2016-train/

@@ -3,16 +3,18 @@ Attention-based Bidirectional Long Short-Term Memory model for classification of
 
 Code developed by Samuel Rönnqvist, with contributions and comments from Farrokh Mehryary, Niko Schenk and Philip Schultz.
 
-**NOTE**: The model from these authors performs bad on the blind test dataset!!! Also, the attention is computed in respect to a fixed query vector.
+**NOTE**: The original model from these authors **performs bad** on the blind test dataset from CoNLL2016st! It also **cheats by shuffling** the training and validation datasets and show much better validation score! The partial sampling implementation differs from the one in the paper, because it contains a **bug**. Otherwise, the **attention layer is unusual**, because it is computed in respect to a fixed query vector.
+
+Results after fixing these issues (see `output-corrected.txt` and `output-original.txt`):
 
 ```
 Trainable params: 6,569,710
-Best validation score: 92.86 
-with test score: 71.59
-with blind score: 56.39
+Best validation score: 64.78
+with test score: 69.03
+with blind score: 62.99
 ```
 
-This repository hosts the model described in: 
+This repository hosts the corrected model described in: 
 
 Samuel Rönnqvist, Niko Schenk and Christian Chiarcos. [A Recurrent Neural Model with Attention for the Recognition of Chinese Implicit Discourse Relations](https://arxiv.org/pdf/1704.08092.pdf). In *Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL)*. 2017.
 
