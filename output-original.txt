@@ -1,0 +1,191 @@
+$ KERAS_BACKEND=theano THEANO_FLAGS='device=gpu,floatX=float32,nvcc.fastmath=True,lib.cnmem=0.45' python3 train.py
+Using Theano backend.
+Using gpu device 0: GeForce GTX 980 Ti (CNMeM is enabled with initial size: 45.0% of memory, cuDNN 5105)
+Reading conll16st-zh-01-08-2016-train/
+Parses...
+Relations...
+31216 read
+
+Reading conll16st-zh-01-08-2016-dev/
+Parses...
+Relations...
+1204 read
+
+Reading conll16st-zh-01-08-2016-test/
+Parses...
+Relations...
+352 read
+
+Reading conll16st-zh-04-27-2016-blind-test/
+Parses...
+Relations...
+1486 read
+
+Maximum sequence length 256
+Vocabulary: 17078
+Classes: 10
+Reading word vectors...
+Mapping word vectors...
+Validation size 1204
+Reading conll16st-zh-01-08-2016-test/
+Reading conll16st-zh-04-27-2016-blind-test/
+____________________________________________________________________________________________________
+Layer (type)                     Output Shape          Param #     Connected to
+====================================================================================================
+input_1 (InputLayer)             (None, 256)           0
+____________________________________________________________________________________________________
+embedding_1 (Embedding)          (None, 256, 300)      5124000     input_1[0][0]
+____________________________________________________________________________________________________
+bidirectional_1 (Bidirectional)  (None, 256, 300)      1442400     embedding_1[0][0]
+____________________________________________________________________________________________________
+M_ATTN1 (FarATTN)                (None, 300)           300         bidirectional_1[0][0]
+____________________________________________________________________________________________________
+dropout_1 (Dropout)              (None, 300)           0           M_ATTN1[0][0]
+____________________________________________________________________________________________________
+dense_1 (Dense)                  (None, 10)            3010        dropout_1[0][0]
+====================================================================================================
+Total params: 6,569,710
+Trainable params: 6,569,710
+Non-trainable params: 0
+____________________________________________________________________________________________________
+Epoch 1/1
+31216/31216 [==============================] - 189s - loss: 1.1676 - acc: 0.6608
+        dev     test    blind
+acc.    69.93%  64.49%  72.34%  *
+Test accuracy on any sense: 64.49
+Blind accuracy on any sense: 72.34
+Epoch 2/2
+31216/31216 [==============================] - 190s - loss: 0.9233 - acc: 0.6879
+        dev     test    blind
+acc.    72.09%  68.18%  52.62%  *
+Test accuracy on any sense: 68.18
+Blind accuracy on any sense: 52.62
+Epoch 3/3
+31216/31216 [==============================] - 190s - loss: 0.8505 - acc: 0.7132
+        dev     test    blind
+acc.    74.75%  64.20%  48.38%  *
+Test accuracy on any sense: 64.2
+Blind accuracy on any sense: 48.38
+Epoch 4/4
+31216/31216 [==============================] - 189s - loss: 0.7996 - acc: 0.7281
+        dev     test    blind
+acc.    76.99%  65.91%  50.74%  *
+Test accuracy on any sense: 65.91
+Blind accuracy on any sense: 50.74
+Epoch 5/5
+31216/31216 [==============================] - 189s - loss: 0.7529 - acc: 0.7446
+        dev     test    blind
+acc.    77.33%  65.63%  50.27%  *
+Test accuracy on any sense: 65.62
+Blind accuracy on any sense: 50.27
+Epoch 6/6
+31216/31216 [==============================] - 189s - loss: 0.7104 - acc: 0.7557
+        dev     test    blind
+acc.    77.91%  64.77%  46.90%  *
+Test accuracy on any sense: 64.77
+Blind accuracy on any sense: 46.9
+Epoch 7/7
+31216/31216 [==============================] - 189s - loss: 0.6733 - acc: 0.7710
+        dev     test    blind
+acc.    80.65%  65.91%  52.96%  *
+Test accuracy on any sense: 65.91
+Blind accuracy on any sense: 52.96
+Epoch 8/8
+31216/31216 [==============================] - 189s - loss: 0.6461 - acc: 0.7865
+        dev     test    blind
+acc.    80.15%  66.48%  64.33%
+Epoch 9/9
+31216/31216 [==============================] - 189s - loss: 0.6125 - acc: 0.8028
+        dev     test    blind
+acc.    84.47%  66.76%  50.87%  *
+Test accuracy on any sense: 66.76
+Blind accuracy on any sense: 50.87
+Epoch 10/10
+31216/31216 [==============================] - 189s - loss: 0.5884 - acc: 0.8103
+        dev     test    blind
+acc.    84.97%  69.32%  54.64%  *
+Test accuracy on any sense: 69.32
+Blind accuracy on any sense: 54.64
+Epoch 11/11
+31216/31216 [==============================] - 189s - loss: 0.5642 - acc: 0.8165
+        dev     test    blind
+acc.    85.80%  65.34%  48.18%  *
+Test accuracy on any sense: 65.34
+Blind accuracy on any sense: 48.18
+Epoch 12/12
+31216/31216 [==============================] - 189s - loss: 0.5405 - acc: 0.8252
+        dev     test    blind
+acc.    85.22%  66.76%  64.67%
+Epoch 13/13
+31216/31216 [==============================] - 189s - loss: 0.5199 - acc: 0.8318
+        dev     test    blind
+acc.    86.71%  67.61%  60.97%  *
+Test accuracy on any sense: 67.61
+Blind accuracy on any sense: 60.97
+Epoch 14/14
+31216/31216 [==============================] - 189s - loss: 0.5080 - acc: 0.8349
+        dev     test    blind
+acc.    86.05%  69.89%  58.08%
+Epoch 15/15
+31216/31216 [==============================] - 189s - loss: 0.4942 - acc: 0.8400
+        dev     test    blind
+acc.    87.71%  69.03%  57.34%  *
+Test accuracy on any sense: 69.03
+Blind accuracy on any sense: 57.34
+Epoch 16/16
+31216/31216 [==============================] - 189s - loss: 0.4763 - acc: 0.8441
+        dev     test    blind
+acc.    87.87%  67.90%  57.20%  *
+Test accuracy on any sense: 67.9
+Blind accuracy on any sense: 57.2
+Epoch 17/17
+31216/31216 [==============================] - 190s - loss: 0.4589 - acc: 0.8495
+        dev     test    blind
+acc.    88.37%  68.18%  59.15%  *
+Test accuracy on any sense: 68.18
+Blind accuracy on any sense: 59.15
+Epoch 18/18
+31216/31216 [==============================] - 194s - loss: 0.4411 - acc: 0.8564
+        dev     test    blind
+acc.    89.37%  70.74%  56.19%  *
+Test accuracy on any sense: 70.74
+Blind accuracy on any sense: 56.19
+Epoch 19/19
+31216/31216 [==============================] - 198s - loss: 0.4289 - acc: 0.8598
+        dev     test    blind
+acc.    91.45%  69.89%  51.14%  *
+Test accuracy on any sense: 69.89
+Blind accuracy on any sense: 51.14
+Epoch 20/20
+31216/31216 [==============================] - 198s - loss: 0.4125 - acc: 0.8654
+        dev     test    blind
+acc.    91.20%  71.59%  53.90%
+Epoch 21/21
+31216/31216 [==============================] - 198s - loss: 0.4039 - acc: 0.8684
+        dev     test    blind
+acc.    91.03%  71.02%  54.37%
+Epoch 22/22
+31216/31216 [==============================] - 198s - loss: 0.3889 - acc: 0.8716
+        dev     test    blind
+acc.    91.61%  71.88%  59.49%  *
+Test accuracy on any sense: 71.88
+Blind accuracy on any sense: 59.49
+Epoch 23/23
+31216/31216 [==============================] - 198s - loss: 0.3856 - acc: 0.8738
+        dev     test    blind
+acc.    92.69%  72.16%  59.96%  *
+Test accuracy on any sense: 72.16
+Blind accuracy on any sense: 59.96
+Epoch 24/24
+31216/31216 [==============================] - 198s - loss: 0.3755 - acc: 0.8777
+        dev     test    blind
+acc.    91.03%  70.45%  63.80%
+Epoch 25/25
+31216/31216 [==============================] - 198s - loss: 0.3690 - acc: 0.8791
+        dev     test    blind
+acc.    92.86%  71.59%  56.39%  *
+Test accuracy on any sense: 71.59
+Blind accuracy on any sense: 56.39
+Best validation score: 92.86
+with test score: 71.59
+with blind score: 56.39

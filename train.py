@@ -80,15 +80,16 @@ def shift(X, y, dev_X, dev_y, shuffle=False, val_size=None):
 
 ## Load data
 
-trainset = resources.read_relations("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-zh-01-08-2016-train/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
-devset = resources.read_relations("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-zh-01-08-2016-dev/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
-testset = resources.read_relations("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-zh-01-08-2016-test/", ignore_types=["Explicit", "AltLex"])
-"""
-trainset = resources.read_relations("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-en-03-29-16-train/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
-devset = resources.read_relations("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-en-03-29-16-dev/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
-testset = resources.read_relations("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-en-03-29-16-test/", ignore_types=["Explicit", "AltLex"])
-"""
-
+# Chinese
+trainset = resources.read_relations("conll16st-zh-01-08-2016-train/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
+devset = resources.read_relations("conll16st-zh-01-08-2016-dev/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
+testset = resources.read_relations("conll16st-zh-01-08-2016-test/", ignore_types=["Explicit", "AltLex"])
+blindset = resources.read_relations("conll16st-zh-04-27-2016-blind-test/", ignore_types=["Explicit", "AltLex"])
+# English
+#trainset = resources.read_relations("conll16st-en-03-29-16-train/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
+#devset = resources.read_relations("conll16st-en-03-29-16-dev/", ignore_types=["Explicit", "AltLex"], partial_sampling=True)
+#testset = resources.read_relations("conll16st-en-03-29-16-test/", ignore_types=["Explicit", "AltLex"])
+#blindset = resources.read_relations("conll15st-en-03-29-16-blind-test/", ignore_types=["Explicit", "AltLex"])
 
 max_len	= 256	# Maximum input sequence length
 # Set maximum input sequence length as percentile of actual lengths
@@ -98,7 +99,7 @@ print ("Maximum sequence length", max_len)
 
 vocab = set()
 labels = set()
-for tokens, label in trainset+devset+testset:
+for tokens, label in trainset+devset+testset+blindset:
 	if type(tokens) is tuple:
 		tokens = tokens[0] + tokens[1]
 	for token in tokens:
@@ -125,11 +126,12 @@ emb_dim = vectors.shape[1] # Word embedding dimensions
 X, y = convert_data(trainset)
 dev_X, dev_y = convert_data(devset, nclasses=y.shape[1])
 test_X, test_y = convert_data(testset, nclasses=y.shape[1])
+blind_X, blind_y = convert_data(blindset, nclasses=y.shape[1])
 
 ## Define model
 batch_size = 80
 
-X, y, dev_X, dev_y = shift(X, y, dev_X, dev_y, val_size=None, shuffle=True)
+# was cheating: X, y, dev_X, dev_y = shift(X, y, dev_X, dev_y, val_size=None, shuffle=True)
 
 for nexp in range(5):
 	# Repeat experiment
@@ -152,32 +154,44 @@ for nexp in range(5):
 
 
 	## Training and evaluation
-	test_senses = resources.read_senses("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-zh-01-08-2016-test/", ignore_types=["Explicit", "AltLex"])
-	#test_senses = resources.read_senses("conll16st-en-zh-dev-train-test_LDC2016E50/conll16st-en-03-29-16-test/", ignore_types=["Explicit", "AltLex"])
+	test_senses = resources.read_senses("conll16st-zh-01-08-2016-test/", ignore_types=["Explicit", "AltLex"])
+	#test_senses = resources.read_senses("conll16st-en-03-29-16-test/", ignore_types=["Explicit", "AltLex"])
 	test_labels = [[label2id[s] for s in ss] for ss in test_senses]
+
+	blind_senses = resources.read_senses("conll16st-zh-04-27-2016-blind-test/", ignore_types=["Explicit", "AltLex"])
+	#blind_senses = resources.read_senses("conll15st-en-03-29-16-blind-test/", ignore_types=["Explicit", "AltLex"])
+	blind_labels = [[label2id[s] for s in ss] for ss in blind_senses]
 
 	model = Model(input=inlayer1, output=output)
 	model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
+	model.summary()
 
-
-	best_val, best_val_test = 0, 0
+	best_val, best_val_test, best_val_blind = 0., 0., 0.
 	for epoch in range(25):
 		_ = model.fit(X, y, nb_epoch=epoch+1, batch_size=batch_size, verbose=1
 			#validation_data=(dev_X, dev_y)
 			,initial_epoch=epoch
 			)
 		#scores = model.evaluate(X, y, verbose=1)
-		print ("\tdev\ttest")
+		print ("\tdev\ttest\tblind")
 		dev_scores = model.evaluate(dev_X, dev_y, verbose=0, batch_size=batch_size)
 		print ("acc.\t%.2f%%" % (dev_scores[1]*100), end="", flush=True)
 		test_scores = model.evaluate(test_X, test_y, verbose=0, batch_size=batch_size)
 		print ("\t%.2f%%" % (test_scores[1]*100), end="", flush=True)
+		blind_scores = model.evaluate(blind_X, blind_y, verbose=0, batch_size=batch_size)
+		print ("\t%.2f%%" % (blind_scores[1]*100), end="", flush=True)
 		if dev_scores[1] > best_val:
+			best_val = dev_scores[1]
+
 			print ("\t*")
 			best_val_test_any = eval_any(test_labels, [np.argmax(y) for y in model.predict(test_X, batch_size=batch_size)])
-			best_val = dev_scores[1]
 			best_val_test = (best_val_test_any,)
 			print ("Test accuracy on any sense:", round(best_val_test_any*100,2))
+
+			best_val_blind_any = eval_any(blind_labels, [np.argmax(y) for y in model.predict(blind_X, batch_size=batch_size)])
+			best_val_blind = (best_val_blind_any,)
+			print ("Blind accuracy on any sense:", round(best_val_blind_any*100,2))
+
 			#print("Saving model...")
 			#model.save("model.keras")
 		else:
@@ -185,6 +199,7 @@ for nexp in range(5):
 
 	print ("Best validation score:", round(best_val*100,2))
 	print ("with test score: %.2f" % tuple([x*100 for x in best_val_test]))
+	print ("with blind score: %.2f" % tuple([x*100 for x in best_val_blind]))
 
 	# Reset model for next experiment
 	del inlayer1, emb1, lstm1, attention1, att1drop, output, model, opt

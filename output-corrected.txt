@@ -1,0 +1,160 @@
+$ KERAS_BACKEND=theano THEANO_FLAGS='device=gpu,floatX=float32,nvcc.fastmath=True' python3 train.py
+Using Theano backend.
+Using gpu device 0: GeForce GTX 980 Ti (CNMeM is disabled, cuDNN 5105)
+Reading conll16st-zh-01-08-2016-train/
+Parses...
+Relations...
+31216 read
+
+Reading conll16st-zh-01-08-2016-dev/
+Parses...
+Relations...
+1204 read
+
+Reading conll16st-zh-01-08-2016-test/
+Parses...
+Relations...
+352 read
+
+Reading conll16st-zh-04-27-2016-blind-test/
+Parses...
+Relations...
+1486 read
+
+Maximum sequence length 256
+Vocabulary: 17078
+Classes: 10
+Reading word vectors...
+Mapping word vectors...
+Reading conll16st-zh-01-08-2016-test/
+Reading conll16st-zh-04-27-2016-blind-test/
+____________________________________________________________________________________________________
+Layer (type)                     Output Shape          Param #     Connected to
+====================================================================================================
+input_1 (InputLayer)             (None, 256)           0
+____________________________________________________________________________________________________
+embedding_1 (Embedding)          (None, 256, 300)      5124000     input_1[0][0]
+____________________________________________________________________________________________________
+bidirectional_1 (Bidirectional)  (None, 256, 300)      1442400     embedding_1[0][0] 
+____________________________________________________________________________________________________
+M_ATTN1 (FarATTN)                (None, 300)           300         bidirectional_1[0][0]
+____________________________________________________________________________________________________
+dropout_1 (Dropout)              (None, 300)           0           M_ATTN1[0][0]
+____________________________________________________________________________________________________
+dense_1 (Dense)                  (None, 10)            3010        dropout_1[0][0]   
+====================================================================================================
+Total params: 6,569,710
+Trainable params: 6,569,710
+Non-trainable params: 0
+____________________________________________________________________________________________________
+Epoch 1/1
+31216/31216 [==============================] - 339s - loss: 1.1973 - acc: 0.6398
+        dev     test    blind
+acc.    62.46%  61.08%  49.80%  *
+Test accuracy on any sense: 61.08
+Blind accuracy on any sense: 49.8
+Epoch 2/2
+31216/31216 [==============================] - 341s - loss: 0.9746 - acc: 0.6656
+        dev     test    blind
+acc.    64.12%  66.48%  63.80%  *
+Test accuracy on any sense: 66.48
+Blind accuracy on any sense: 63.8
+Epoch 3/3
+31216/31216 [==============================] - 341s - loss: 0.9067 - acc: 0.6878
+        dev     test    blind
+acc.    61.05%  68.75%  47.31%
+Epoch 4/4
+31216/31216 [==============================] - 341s - loss: 0.8555 - acc: 0.7069
+        dev     test    blind
+acc.    62.71%  67.90%  51.41%
+Epoch 5/5
+31216/31216 [==============================] - 341s - loss: 0.8168 - acc: 0.7233
+        dev     test    blind
+acc.    62.38%  69.03%  54.78%
+Epoch 6/6
+31216/31216 [==============================] - 341s - loss: 0.7816 - acc: 0.7326
+        dev     test    blind
+acc.    63.95%  65.34%  55.65%
+Epoch 7/7
+31216/31216 [==============================] - 341s - loss: 0.7491 - acc: 0.7441
+        dev     test    blind
+acc.    63.29%  71.31%  59.02%
+Epoch 8/8
+31216/31216 [==============================] - 341s - loss: 0.7239 - acc: 0.7513
+        dev     test    blind
+acc.    64.45%  69.32%  63.46%  *
+Test accuracy on any sense: 69.32
+Blind accuracy on any sense: 63.46
+Epoch 9/9
+31216/31216 [==============================] - 341s - loss: 0.6947 - acc: 0.7648
+        dev     test    blind
+acc.    59.55%  68.47%  51.35%
+Epoch 10/10
+31216/31216 [==============================] - 341s - loss: 0.6724 - acc: 0.7751
+        dev     test    blind
+acc.    59.14%  67.90%  48.05%
+Epoch 11/11
+31216/31216 [==============================] - 341s - loss: 0.6503 - acc: 0.7834
+        dev     test    blind
+acc.    63.62%  69.60%  59.56%
+Epoch 12/12
+31216/31216 [==============================] - 341s - loss: 0.6250 - acc: 0.7915
+        dev     test    blind
+acc.    63.21%  71.02%  58.41%
+Epoch 13/13
+31216/31216 [==============================] - 341s - loss: 0.6032 - acc: 0.8006
+        dev     test    blind
+acc.    59.47%  70.17%  53.23%
+Epoch 14/14
+31216/31216 [==============================] - 341s - loss: 0.5752 - acc: 0.8092
+        dev     test    blind
+acc.    61.13%  72.16%  59.35%
+Epoch 15/15
+31216/31216 [==============================] - 341s - loss: 0.5683 - acc: 0.8099
+        dev     test    blind
+acc.    61.38%  70.45%  58.01%
+Epoch 16/16
+31216/31216 [==============================] - 341s - loss: 0.5430 - acc: 0.8175
+        dev     test    blind
+acc.    62.13%  70.74%  61.78%
+Epoch 17/17
+31216/31216 [==============================] - 341s - loss: 0.5241 - acc: 0.8214
+        dev     test    blind
+acc.    62.13%  70.74%  60.57%
+Epoch 18/18
+31216/31216 [==============================] - 341s - loss: 0.5031 - acc: 0.8286
+        dev     test    blind
+acc.    61.30%  72.16%  59.83%
+Epoch 19/19
+31216/31216 [==============================] - 341s - loss: 0.4986 - acc: 0.8301
+        dev     test    blind
+acc.    63.87%  70.74%  59.69%
+Epoch 20/20
+31216/31216 [==============================] - 341s - loss: 0.4850 - acc: 0.8326
+        dev     test    blind
+acc.    60.63%  69.60%  55.05%
+Epoch 21/21
+31216/31216 [==============================] - 341s - loss: 0.4685 - acc: 0.8407
+        dev     test    blind
+acc.    64.78%  69.03%  62.99%  *
+Test accuracy on any sense: 69.03
+Blind accuracy on any sense: 62.99
+Epoch 22/22
+31216/31216 [==============================] - 341s - loss: 0.4667 - acc: 0.8390
+        dev     test    blind
+acc.    62.38%  71.88%  58.88%
+Epoch 23/23
+31216/31216 [==============================] - 341s - loss: 0.4622 - acc: 0.8416
+        dev     test    blind
+acc.    63.95%  69.89%  62.99%
+Epoch 24/24
+31216/31216 [==============================] - 341s - loss: 0.4402 - acc: 0.8479
+        dev     test    blind
+acc.    60.38%  68.75%  54.71%
+Epoch 25/25
+31216/31216 [==============================] - 341s - loss: 0.4342 - acc: 0.8509
+        dev     test    blind
+acc.    61.30%  69.03%  55.85%
+Best validation score: 64.78
+with test score: 69.03
+with blind score: 62.99

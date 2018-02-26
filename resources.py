@@ -74,6 +74,7 @@ def read_relations(path, ignore_types=[], partial_sampling=False, with_syntax=Fa
             dep_depth.update(dict([(int(token.split('-')[-1])-1, depth+1) for token, depth in traverse(build_tree(doc['sentences'][sent_i]['dependencies']))]))
             for i, token in enumerate(doc['sentences'][sent_i]['words']):
                 if sent_i == arg1_beg_sent and i == arg1_beg_token:
+                    arg_idx = 0  # was missing
                     anno_tokens.append("<ARG1>")
                     arg_tokens[arg_idx].append("<ARG1>")
                     arg_pos[arg_idx].append("<ARG1>")
@@ -152,7 +153,7 @@ def get_vectors(vocab, token2id, path):
         except:
             vectors = gensim.models.word2vec.Word2Vec.load_word2vec_format(path, binary=True)
 
-    vocab_dim = len(vectors[list(vectors.vocab.keys())[0]])
+    vocab_dim = len(vectors[list(vectors.wv.vocab.keys())[0]])
     nsymbols = len(vocab) + 1
     embedding_weights = np.zeros((nsymbols+1,vocab_dim))
     print ("Mapping word vectors...")
@@ -162,7 +163,7 @@ def get_vectors(vocab, token2id, path):
         elif word.lower() in vectors:
             embedding_weights[index,:] = vectors[word.lower()]
         else:
-            embedding_weights[index,:] = vectors[list(vectors.vocab.keys())[0]]*0
+            embedding_weights[index,:] = vectors[list(vectors.wv.vocab.keys())[0]]*0
     return embedding_weights
 
 
